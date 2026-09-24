@@ -39,7 +39,7 @@ pipeline {
         stage('Execute Ansible Playbook') {
             steps {
                 ansiblePlaybook(
-                    credentialsId: 'lab_ansible_jenkins',
+                    credentialsId: 'jenkins_ansible',
                     disableHostKeyChecking: true,
                     installation: 'Ansible',
                     inventory: 'inventory.yml',
