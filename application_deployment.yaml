@@ -1,0 +1,42 @@
+---
+- name: Deploy Application with Nginx
+  hosts: Web02-Ubuntu
+  become: true
+  tasks:
+    - name: Install NGINX server
+      apt:
+        name: nginx
+        state: present
+        update_cache: yes
+      notify: Restart NGINX
+
+    - name: Start and Enable NGINX
+      service:
+        name: nginx
+        state: started
+        enabled: yes
+
+    - name: Deploy Static Website
+      copy:
+        src: files/index.html
+        dest: /var/www/html
+      notify: Restart NGINX
+
+    - name: Get the public IP of target
+      shell: curl ifconfig.me
+      register: public_ip
+
+    - name: Curl the service
+      shell: curl -s -o /dev/null -w "%{http_code}" http://{{ public_ip.stdout }}
+      register: server_code
+
+    - name: Debug the service status
+      debug:
+        msg: "The service status is: {{ server_code.stdout }}"
+
+  handlers:
+    - name: Restart NGINX
+      service:
+        name: nginx
+        state: restarted
+
