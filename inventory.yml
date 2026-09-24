@@ -1,0 +1,8 @@
+all:
+  children:
+    webservers:
+      hosts:
+        Web02-Ubuntu:
+          ansible_host: 172.31.25.243
+          ansible_user: ubuntu
+          ansible_python_interpreter: /usr/bin/python3
